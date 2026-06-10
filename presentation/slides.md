@@ -1,6 +1,6 @@
 ---
 title: "The AI-Augmented Testing Lifecycle"
-theme: "dark"
+theme: "black"
 highlightTheme: "monokai"
 transition: "slide"
 width: 1280
