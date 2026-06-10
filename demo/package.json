@@ -1,0 +1,32 @@
+{
+  "name": "ai-testing-lifecycle-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Demo scripts for 'The AI-Augmented Testing Lifecycle' workshop",
+  "type": "module",
+  "scripts": {
+    "demo:spec": "ANTHROPIC_AUTH_TOKEN=sk-a264ea5509c84900b878ad8176b33c9a npx tsx scripts/evaluate-requirement.ts",
+    "demo:agentic": "LLM_PROVIDER_URL=http://172.30.224.1:1234 npx wdio run wdio.conf.ts",
+    "demo:report": "npx tsx scripts/analyze-report.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.37.0",
+    "@wdio/cli": "^9.0.0",
+    "@wdio/globals": "^9.0.0",
+    "@wdio/local-runner": "^9.0.0",
+    "@wdio/mcp": "2.2.1",
+    "@wdio/mocha-framework": "^9.0.0",
+    "tsx": "^4.0.0",
+    "wdio-agent-service": "latest",
+    "webdriverio": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^25.9.2",
+    "typescript": "^5.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "@wdio/mcp": "2.2.1"
+    }
+  }
+}

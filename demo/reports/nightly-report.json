@@ -1,0 +1,61 @@
+{
+  "stats": {
+    "tests": 847,
+    "passes": 812,
+    "failures": 23,
+    "pending": 12,
+    "duration": 1847000
+  },
+  "failures": [
+    {
+      "title": "Checkout — calculates total with tax",
+      "fullTitle": "Checkout Flow — calculates total with tax",
+      "err": "Expected 110.00 but got 108.50"
+    },
+    {
+      "title": "Checkout — applies discount code",
+      "fullTitle": "Checkout Flow — applies discount code",
+      "err": "Expected 95.00 but got 100.00"
+    },
+    {
+      "title": "Checkout — free shipping threshold",
+      "fullTitle": "Checkout Flow — free shipping threshold",
+      "err": "Expected free shipping badge to be visible but shipping was charged"
+    },
+    {
+      "title": "Product page — displays price",
+      "fullTitle": "Product Page — displays price",
+      "err": "Expected $29.99 but got $0.00"
+    },
+    {
+      "title": "Product page — shows stock status",
+      "fullTitle": "Product Page — shows stock status",
+      "err": "timeout: waiting for .stock-status"
+    },
+    {
+      "title": "Checkout — validates shipping address",
+      "fullTitle": "Checkout Flow — validates shipping address",
+      "err": "element (#shipping-continue) not found"
+    },
+    {
+      "title": "Checkout — payment method selection",
+      "fullTitle": "Checkout Flow — payment method selection",
+      "err": "element (#payment-credit-card) not found"
+    },
+    {
+      "title": "Checkout — order review",
+      "fullTitle": "Checkout Flow — order review",
+      "err": "element (#review-submit) not found"
+    },
+    {
+      "title": "Login — valid credentials",
+      "fullTitle": "Authentication — valid credentials",
+      "err": "timeout: waiting for .dashboard-header"
+    },
+    {
+      "title": "API — authenticated request",
+      "fullTitle": "API Tests — authenticated request",
+      "err": "timeout: request to /api/user/profile timed out after 5000ms"
+    }
+  ]
+}
