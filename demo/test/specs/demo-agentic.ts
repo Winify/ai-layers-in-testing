@@ -7,7 +7,7 @@ describe('Runtime Agentic Testing', () => {
   // ---------------------------------------------------------------
   // Chunk 2a: First agent call — navigate via semantic intent
   // ---------------------------------------------------------------
-  it.skip('should use agent to navigate to login page', async () => {
+  it('should use agent to navigate to login page', async () => {
     await browser.url('https://the-internet.herokuapp.com');
 
     // Traditional: verify we're on the right page
@@ -32,7 +32,7 @@ describe('Runtime Agentic Testing', () => {
   // ---------------------------------------------------------------
   // Chunk 2b: Hybrid pattern — traditional for stable, agent for flaky
   // ---------------------------------------------------------------
-  it.skip('should login using hybrid traditional + agentic approach', async () => {
+  it('should login using hybrid traditional + agentic approach', async () => {
     await browser.url('https://the-internet.herokuapp.com/login');
 
     const formAction = await browser.agent('fill from with username / password: tomsmith / SuperSecretPassword!');
@@ -53,7 +53,7 @@ describe('Runtime Agentic Testing', () => {
   // ---------------------------------------------------------------
   // Chunk 2c: Self-healing — agent adapts when selectors change
   // ---------------------------------------------------------------
-  it.skip('should self-heal when selectors change', async () => {
+  it('should self-heal when selectors change', async () => {
     // Assume we're logged in from previous test
     await browser.url('https://the-internet.herokuapp.com/secure');
 

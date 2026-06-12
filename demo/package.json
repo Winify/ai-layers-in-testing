@@ -5,8 +5,8 @@
   "description": "Demo scripts for 'The AI-Augmented Testing Lifecycle' workshop",
   "type": "module",
   "scripts": {
-    "demo:spec": "ANTHROPIC_AUTH_TOKEN=sk-a264ea5509c84900b878ad8176b33c9a npx tsx scripts/evaluate-requirement.ts",
-    "demo:agentic": "LLM_PROVIDER_URL=http://172.30.224.1:1234 npx wdio run wdio.conf.ts",
+    "demo:spec": "npx tsx scripts/evaluate-requirement.ts",
+    "demo:agentic": "npx wdio run wdio.conf.ts",
     "demo:report": "npx tsx scripts/analyze-report.ts"
   },
   "dependencies": {

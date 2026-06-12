@@ -1,23 +1,20 @@
 import Anthropic from "@anthropic-ai/sdk";
-import {readFileSync} from "fs";
+import { readFileSync } from "fs";
 
-const BASE_URL = process.env.ANTHROPIC_BASE_URL || 'https://api.deepseek.com/anthropic';
-const AUTH_TOKEN = process.env.ANTHROPIC_AUTH_TOKEN || process.env.ANTHROPIC_API_KEY || '';
-const MODEL = process.env.ANTHROPIC_DEFAULT_HAIKU_MODEL || 'deepseek-v4-flash';
+const baseURL = process.env.ANTHROPIC_BASE_URL || 'https://api.deepseek.com/anthropic';
+const apiKey = process.env.ANTHROPIC_AUTH_TOKEN || process.env.ANTHROPIC_API_KEY || '';
+const model = process.env.ANTHROPIC_DEFAULT_HAIKU_MODEL || 'deepseek-v4-flash';
 
-const anthropic = new Anthropic({
-  baseURL: BASE_URL,
-  apiKey: AUTH_TOKEN,
-});
+const anthropic = new Anthropic({ baseURL,  apiKey });
 
 async function evaluateRequirement(specPath: string) {
   const spec = readFileSync(specPath, 'utf-8');
 
   console.log('📄 Spec loaded:', spec.length, 'characters');
-  console.log(`🧠 Sending to ${MODEL} (via ${BASE_URL}) for evaluation...\n`);
+  console.log(`🧠 Sending to ${model} (via ${baseURL}) for evaluation...\n`);
 
   const response = await anthropic.messages.create({
-    model: MODEL,
+    model,
     max_tokens: 8192,
     system: `You are a senior QA architect. Analyze the given specification
 for testing completeness. Return ONLY valid JSON (no markdown, no explanation
@@ -72,8 +69,7 @@ and design test cases.\n\nSPECIFICATION:\n${spec}`
     process.exit(1);
   }
 
-  const result = JSON.parse(text);
-  return result;
+  return JSON.parse(text);
 }
 
 (async () => {

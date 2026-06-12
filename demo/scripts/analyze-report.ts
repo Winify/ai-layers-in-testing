@@ -1,12 +1,24 @@
 import { readFileSync } from 'fs';
 
+type Failure = {
+  title: string
+  fullTitle: string
+  err?: string
+}
+
+const llmBase = (process.env.LLM_PROVIDER_URL || 'http://localhost:1234').replace(/\/+$/, '');
+const model = process.env.LLM_MODEL || 'qwen/qwen3.5-4b';
+
+const temperature = 0.2;
+const max_tokens = 4096;
+
 async function analyzeReport(reportPath: string) {
   const report = JSON.parse(readFileSync(reportPath, 'utf-8'));
 
   // Trim errors to 80 chars to keep prompt small for local models
-  const failuresSummary = report.failures.map((f: any) => ({
+  const failuresSummary = report.failures.map((f: Failure) => ({
     title: f.title,
-    error: (f.err || '').substring(0, 80),
+    error: f.err ?? '',
   }));
 
   const reportDigest = {
@@ -21,13 +33,10 @@ ${JSON.stringify(reportDigest)}
 
 Output: {"groups":[{"rootCause":"...","category":"APP_BUG|TEST_BUG|ENV","count":N,"failures":["..."],"evidence":"..."}],"summary":"2 sentences","actions":[{"action":"...","priority":"high|medium|low","detail":"..."}]}`;
 
-  console.log('📊 Report loaded:', report.stats.tests, 'tests,',
-    report.stats.failures, 'failures');
+  console.log('📊 Report loaded:', report.stats.tests, 'tests,', report.stats.failures, 'failures');
   console.log('🤖 Sending to local model for analysis...\n');
 
   const start = Date.now();
-  const llmBase = (process.env.LLM_PROVIDER_URL || 'http://localhost:1234').replace(/\/+$/, '');
-  const model = process.env.LLM_MODEL || 'qwen/qwen3.5-4b';
   const response = await fetch(`${llmBase}/v1/chat/completions`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -36,8 +45,8 @@ Output: {"groups":[{"rootCause":"...","category":"APP_BUG|TEST_BUG|ENV","count":
       messages: [
         { role: 'user', content: prompt }
       ],
-      temperature: 0.2,
-      max_tokens: 4096,
+      temperature,
+      max_tokens,
     }),
   });
 
@@ -83,9 +92,14 @@ Output: {"groups":[{"rootCause":"...","category":"APP_BUG|TEST_BUG|ENV","count":
     for (let i = jsonStr.length - 1; i >= 0; i--) {
       if (jsonStr[i] === '}') depth++;
       if (jsonStr[i] === '{') depth--;
-      if (depth > 0) { jsonStr = jsonStr.substring(0, i) + '}'; depth--; }
+      if (depth > 0) {
+        jsonStr = jsonStr.substring(0, i) + '}';
+        depth--;
+      }
     }
-    try { analysis = JSON.parse(jsonStr); } catch {
+    try {
+      analysis = JSON.parse(jsonStr);
+    } catch {
       console.error('❌ Could not parse LLM response. Raw output:');
       console.error(data.choices[0].message.content.substring(0, 500));
       process.exit(1);
@@ -96,9 +110,13 @@ Output: {"groups":[{"rootCause":"...","category":"APP_BUG|TEST_BUG|ENV","count":
 
   console.log('🔍 FAILURE GROUPS:');
   for (const g of analysis.groups) {
-    const icon = g.category === 'APP_BUG' ? '🔴' :
-                 g.category === 'TEST_BUG' ? '🟡' :
-                 g.category === 'ENV' ? '🔵' : '⚪';
+    const icon = g.category === 'APP_BUG'
+      ? '🔴'
+      : g.category === 'TEST_BUG'
+        ? '🟡'
+        : g.category === 'ENV'
+          ? '🔵'
+          : '⚪';
     console.log(`   ${icon} ${g.rootCause}`);
     console.log(`      ${g.count} failures — ${g.category}`);
     console.log(`      Evidence: ${g.evidence}\n`);
